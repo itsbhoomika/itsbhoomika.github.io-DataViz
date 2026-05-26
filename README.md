@@ -1,85 +1,48 @@
----
-layout: post
-title: UFO Sightings Analysis
----
+# Data Visualization Portfolio
 
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+> Interactive Vega-Lite visualizations published as a GitHub Pages site — IS 445 Data Visualization @ UIUC.
 
-# UFO Sightings in the United States (1950-2014)
+[![Live](https://img.shields.io/badge/Live%20Site-GitHub%20Pages-blue)](https://itsbhoomika.github.io/itsbhoomika.github.io-DataViz)
+[![Vega-Lite](https://img.shields.io/badge/Vega--Lite-5-purple)](https://vega.github.io/vega-lite/)
 
-## Visualization 1: Geographic Distribution of UFO Sightings
+## Project: UFO Sightings in the United States (1950–2014)
 
-<div id="vis1"></div>
-<script type="text/javascript">
-  var spec = "/assets/json/ufo_map.json";
-  vegaEmbed('#vis1', spec).then(function(result) {
-  }).catch(console.error);
-</script>
+Visual analysis of 63,410 reported UFO sightings using NUFORC data — exploring geographic distribution and temporal trends by shape category.
 
-### Description
-This visualization displays a sample of 5,000 UFO sightings across the United States, showing the geographic distribution of reported encounters. Each point represents a sighting location, with colors indicating the shape of the UFO observed.
+## File Guide
 
-### Design Choices
+| File | What it does |
+|------|--------------|
+| `Workbook-3.ipynb` | **Analysis notebook** — data cleaning, coordinate filtering, shape aggregation, Vega-Lite JSON spec generation |
+| `_posts/` | Jekyll blog posts — each hosts one visualization with design rationale and data transformation notes |
+| `assets/` | Generated Vega-Lite JSON specs (`ufo_map.json`, `ufo_timeseries.json`) consumed by the live site |
+| `index.md` | Site landing page listing all posts |
+| `_config.yml` | Jekyll configuration |
 
-**Encoding Types**: I used a geographic scatter plot with longitude and latitude encodings to plot sighting locations. The AlbersUSA projection provides an accurate representation of the continental United States, Alaska, and Hawaii. Color encoding is used to distinguish between different UFO shapes, while tooltips provide additional context including city, state, shape, year, and duration.
+## Visualizations
 
-**Color Scheme**: I selected the 'category20' color scheme to differentiate between the various UFO shapes. This qualitative color palette provides sufficient visual distinction between the 20+ different shape categories in the dataset, making it easy to identify patterns in shape distribution across different regions.
+### 1. Geographic Distribution Map
+- 5,000 sampled US sightings plotted by latitude/longitude (AlbersUSA projection)
+- Color-encoded by UFO shape (category-20 scheme, 20+ shape categories)
+- Tooltips: city, state, shape, year, duration
 
-### Data Transformations
-Several transformations were applied in the Python notebook:
-- Filtered data to include only US sightings (country == 'us')
-- Removed records with missing latitude, longitude, shape, or year values
-- Filtered geographic coordinates to reasonable ranges for the US (latitude: 20-72°, longitude: -180° to -65°)
-- Limited the time range to 1950-2014 to focus on the modern UFO phenomenon era
-- Sampled 5,000 random sightings from the 63,410 US sightings to optimize visualization performance and reduce overplotting
+### 2. Sightings Over Time by Shape (Interactive)
+- Line chart: sightings per year (1950–2014), broken down by top-10 shapes
+- **Interactive dropdown** — select a shape to highlight its trend line; others dim to gray
+- Reveals the dramatic post-1995 surge in reported sightings (likely correlated with internet reporting)
 
----
+## Data Transformations (in `Workbook-3.ipynb`)
 
-## Visualization 2: UFO Sightings Over Time by Shape
+- Filtered to US sightings only (`country == 'us'`)
+- Removed records with missing lat/long, shape, or year
+- Clipped to valid US coordinate ranges
+- Sampled 5,000 from 63,410 to reduce overplotting
+- Extracted top-10 shapes for time series to avoid visual clutter
 
-<div id="vis2"></div>
-<script type="text/javascript">
-  var spec = "/assets/json/ufo_timeseries.json";
-  vegaEmbed('#vis2', spec).then(function(result) {
-  }).catch(console.error);
-</script>
+## Tech Stack
 
-### Description
-This interactive line chart shows the trend in UFO sightings from 1950 to 2014, broken down by the shape of the observed object. The visualization reveals a dramatic increase in reported sightings beginning in the mid-1990s, with a peak around 2010-2012.
+`Python` · `Pandas` · `Vega-Lite 5` · `Jekyll` · `GitHub Pages`
 
-### Design Choices
+## Data Source
 
-**Encoding Types**: I used a line chart with year on the x-axis (quantitative) and count of sightings on the y-axis (quantitative). Each line represents a different UFO shape (nominal), with point markers at each year to emphasize individual data points. The temporal encoding allows viewers to easily track trends over the 64-year period.
-
-**Color Scheme**: The 'category10' color scheme differentiates the top 10 most common UFO shapes. When a shape is selected via the dropdown, its line remains fully colored and opaque, while unselected shapes fade to light gray with reduced opacity, allowing for focused comparison while maintaining context of overall trends.
-
-### Data Transformations
-Additional transformations for this visualization:
-- Parsed datetime strings into proper datetime objects using pandas
-- Extracted year from the datetime field for temporal aggregation
-- Filtered to include only the top 10 most common shapes to avoid visual clutter
-- Grouped data by year and shape, counting the number of sightings for each combination
-- This aggregation reduced the dataset from 63,410 individual sightings to manageable time series data
-
----
-
-## Interactivity: Shape Selection Dropdown
-
-The time series visualization includes an interactive dropdown menu that allows users to select specific UFO shapes or view all shapes simultaneously. When a shape is selected, its trend line is highlighted while others are dimmed, making it easier to focus on specific patterns without losing the broader context. 
-
-This interactivity enhances the visualization by allowing users to:
-- Compare specific shapes against the overall trend
-- Identify which shapes became more or less common over time
-- Focus on shapes of particular interest (e.g., "triangle" or "fireball") without creating separate charts
-
-The dramatic rise in sightings across all shapes from the mid-1990s onward likely correlates with increased internet usage and online reporting platforms, making it easier for people to document and share their experiences. The interactivity makes this pattern clear while allowing exploration of shape-specific trends.
-
----
-
-## Links
-
-**[The Data](https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_data/main/ufo-scrubbed-geocoded-time-standardized-00.csv)**
-
-**[The Analysis](https://github.com/itsbhoomika/itsbhoomika.github.io/blob/main/Workbook-3.ipynb)**
+[UIUC iSchool UFO dataset](https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_data/main/ufo-scrubbed-geocoded-time-standardized-00.csv)
